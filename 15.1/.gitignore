@@ -1,0 +1,20 @@
+# Terraform files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Environment variables and secrets
+*.tfvars
+terraform.tfvars
+*.auto.tfvars
+
+# Sensitive data
+.env
+secrets.auto.tfvars
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
