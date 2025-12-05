@@ -16,20 +16,20 @@ provider "yandex" {
   zone      = var.yc_zone
 }
 
-# Используем существующую сеть вместо создания новой
+# Использую существующую сеть вместо создания новой
 data "yandex_vpc_network" "network" {
   name = "default"
 }
 
-# Создаем подсеть в существующей сети
+# Создаю подсеть в существующей сети
 resource "yandex_vpc_subnet" "public_subnet" {
   name           = "public-subnet-sokolkov"
   zone           = var.yc_zone
   network_id     = data.yandex_vpc_network.network.id
-  v4_cidr_blocks = ["192.168.100.0/24"]  # Изменили на другой диапазон
+  v4_cidr_blocks = ["192.168.100.0/24"]
 }
 
-# 2. Создаем сервисный аккаунт для бакета
+# 2. Создаю сервисный аккаунт для бакета
 resource "yandex_iam_service_account" "sa" {
   name        = "sa-sokolkov-153"
   description = "Service account for bucket and instance group"
@@ -46,7 +46,7 @@ resource "yandex_iam_service_account_static_access_key" "sa-key" {
   description        = "Static access key for bucket"
 }
 
-# 1. Создаем ключ KMS 
+# 1. Создаю ключ KMS 
 resource "yandex_kms_symmetric_key" "bucket-key" {
   name              = "sokolkov-bucket-key"
   description       = "KMS key for bucket encryption"
@@ -184,7 +184,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
 
   scale_policy {
     fixed_scale {
-      size = 2  # Уменьшили с 3 до 2 из экономии
+      size = 2
     }
   }
 
@@ -211,7 +211,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
   }
 }
 
-# 5. Создаем Network Load Balancer (убираем, чтобы сэкономить ресурсы)
+# 5. Создаем Network Load Balancer (убрал, чтобы сэкономить ресурсы)
 # resource "yandex_lb_network_load_balancer" "nlb" {
 #   name = "nlb-sokolkov-153"
 
@@ -236,7 +236,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
 #   }
 # }
 
-# 6. Создаем Application Load Balancer (убираем, чтобы сэкономить ресурсы)
+# 6. Создаем Application Load Balancer (убрал, чтобы сэкономить ресурсы)
 # resource "yandex_vpc_address" "alb-address" {
 #   name = "alb-address-sokolkov"
 #   external_ipv4_address {
