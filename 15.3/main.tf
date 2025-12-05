@@ -31,7 +31,7 @@ resource "yandex_vpc_subnet" "public_subnet" {
 
 # 2. Создаем сервисный аккаунт для бакета
 resource "yandex_iam_service_account" "sa" {
-  name        = "sa-sokolkov-april-o2"
+  name        = "sa-sokolkov-153"
   description = "Service account for bucket and instance group"
 }
 
@@ -66,7 +66,7 @@ resource "yandex_resourcemanager_folder_iam_member" "kms-user" {
 resource "yandex_storage_bucket" "bucket" {
   access_key = yandex_iam_service_account_static_access_key.sa-key.access_key
   secret_key = yandex_iam_service_account_static_access_key.sa-key.secret_key
-  bucket     = "sokolkov-april-o2"
+  bucket     = "sokolkov-153"
   
   anonymous_access_flags {
     read = true
@@ -176,7 +176,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
         #cloud-config
         runcmd:
           - cd /var/www/html
-          - echo '<html><h1>Sokolkov April O2</h1><img src="http://${yandex_storage_bucket.bucket.bucket_domain_name}/sokolkov.jpg"/></html>' | sudo tee index.html
+          - echo '<html><h1>Sokolkov 153</h1><img src="http://${yandex_storage_bucket.bucket.bucket_domain_name}/sokolkov.jpg"/></html>' | sudo tee index.html
           - sudo systemctl restart apache2
       EOF
     }
@@ -213,7 +213,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
 
 # 5. Создаем Network Load Balancer (убираем, чтобы сэкономить ресурсы)
 # resource "yandex_lb_network_load_balancer" "nlb" {
-#   name = "nlb-sokolkov-april-o2"
+#   name = "nlb-sokolkov-153"
 
 #   listener {
 #     name = "http-listener"
@@ -294,7 +294,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
 # }
 
 # resource "yandex_alb_load_balancer" "alb" {
-#   name               = "alb-sokolkov-april-o2"
+#   name               = "alb-sokolkov-153"
 #   network_id         = data.yandex_vpc_network.network.id
 
 #   allocation_policy {
