@@ -21,7 +21,7 @@ data "yandex_vpc_network" "network" {
   name = "default"
 }
 
-# Создаю подсеть в существующей сети
+# Подсеть в существующей сети
 resource "yandex_vpc_subnet" "public_subnet" {
   name           = "public-subnet-sokolkov"
   zone           = var.yc_zone
@@ -29,7 +29,7 @@ resource "yandex_vpc_subnet" "public_subnet" {
   v4_cidr_blocks = ["192.168.100.0/24"]
 }
 
-# 2. Создаю сервисный аккаунт для бакета
+# Сервисный аккаунт для бакета
 resource "yandex_iam_service_account" "sa" {
   name        = "sa-sokolkov-153"
   description = "Service account for bucket and instance group"
@@ -46,7 +46,7 @@ resource "yandex_iam_service_account_static_access_key" "sa-key" {
   description        = "Static access key for bucket"
 }
 
-# 1. Создаю ключ KMS 
+# Ключ KMS 
 resource "yandex_kms_symmetric_key" "bucket-key" {
   name              = "sokolkov-bucket-key"
   description       = "KMS key for bucket encryption"
@@ -61,7 +61,7 @@ resource "yandex_resourcemanager_folder_iam_member" "kms-user" {
   member    = "serviceAccount:${yandex_iam_service_account.sa.id}"
 }
 
-# 3. Создаем бакет и загружаем картинку
+# Создаем бакет и загружаем картинку
 # бакет с шифрованием и настройками для статического сайта
 resource "yandex_storage_bucket" "bucket" {
   access_key = yandex_iam_service_account_static_access_key.sa-key.access_key
@@ -103,7 +103,7 @@ resource "yandex_storage_object" "image" {
   acl         = "public-read"
 }
 
-# Создаем index.html для статического сайта
+# index.html для статического сайта
 resource "yandex_storage_object" "index_html" {
   bucket      = yandex_storage_bucket.bucket.bucket
   access_key  = yandex_iam_service_account_static_access_key.sa-key.access_key
@@ -140,7 +140,7 @@ resource "yandex_storage_object" "index_html" {
   acl         = "public-read"
 }
 
-# 4. Создаем группу ВМ с LAMP
+# ВМ с LAMP
 data "yandex_compute_image" "lamp" {
   family = "lamp"
 }
@@ -211,7 +211,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
   }
 }
 
-# 5. Создаем Network Load Balancer (убрал, чтобы сэкономить ресурсы)
+# Network Load Balancer (убрал, чтобы сэкономить ресурсы)
 # resource "yandex_lb_network_load_balancer" "nlb" {
 #   name = "nlb-sokolkov-153"
 
@@ -236,7 +236,7 @@ resource "yandex_compute_instance_group" "lamp-group" {
 #   }
 # }
 
-# 6. Создаем Application Load Balancer (убрал, чтобы сэкономить ресурсы)
+# Application Load Balancer (убрал, чтобы сэкономить ресурсы)
 # resource "yandex_vpc_address" "alb-address" {
 #   name = "alb-address-sokolkov"
 #   external_ipv4_address {
